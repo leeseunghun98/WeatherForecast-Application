@@ -1,5 +1,7 @@
 package com.example.jetweatherforecast.widgets
 
+import android.net.Uri
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
@@ -17,21 +19,32 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.jetweatherforecast.R
+import com.example.jetweatherforecast.model.City
+import com.example.jetweatherforecast.model.ParcelableWeatherItem
 import com.example.jetweatherforecast.model.WeatherItem
+import com.example.jetweatherforecast.navigation.WeatherScreens
 import com.example.jetweatherforecast.utils.formatDate
 import com.example.jetweatherforecast.utils.formatDateTime
 import com.example.jetweatherforecast.utils.formatDecimals
+import com.example.jetweatherforecast.utils.parcelWeatherConverter
+import com.google.gson.Gson
 
 @Composable
-fun WeatherDetailRow(weather: WeatherItem) {
+fun WeatherDetailRow(weather: WeatherItem, navController: NavController, city: City, index: Int) {
     val imageUrl = "https://openweathermap.org/img/wn/${weather.weather[0].icon}.png"
 
     Surface(
         modifier = Modifier
             .padding(3.dp)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .clickable {
+                val parcelWeatherItem = parcelWeatherConverter(weather)
+                val json = Uri.encode(Gson().toJson(parcelWeatherItem))
+                navController.navigate(WeatherScreens.ThisWeekDetailScreen.name + "/${json}")
+            },
         shape = CircleShape.copy(topEnd = CornerSize(6.dp)),
         color = Color.White
     ) {
@@ -134,7 +147,10 @@ fun HumidityWindPressureRow(weather: WeatherItem, isImperial: Boolean) {
                 contentDescription = "wind icon",
                 modifier = Modifier.size(20.dp)
             )
-            Text(text = "${formatDecimals(weather.speed)} " + if (isImperial) "mph" else "m/s", style = MaterialTheme.typography.caption)
+            Text(
+                text = "${formatDecimals(weather.speed)} " + if (isImperial) "mph" else "m/s",
+                style = MaterialTheme.typography.caption
+            )
         }
     }
 }

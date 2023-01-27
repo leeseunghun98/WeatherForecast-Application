@@ -7,7 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.jetweatherforecast.model.ParcelableWeatherItem
+import com.example.jetweatherforecast.navigation.customtype.WeatherType
 import com.example.jetweatherforecast.screens.about.AboutScreen
+import com.example.jetweatherforecast.screens.daydetail.ThisWeekDetailScreen
 import com.example.jetweatherforecast.screens.favorites.FavoritesScreen
 import com.example.jetweatherforecast.screens.main.MainScreen
 import com.example.jetweatherforecast.screens.main.MainViewModel
@@ -44,6 +47,15 @@ fun WeatherNavigation() {
         }
         composable(WeatherScreens.FavoriteScreen.name) {
             FavoritesScreen(navController = navController)
+        }
+        val thisWeekDetailScreen = WeatherScreens.ThisWeekDetailScreen.name
+        composable("$thisWeekDetailScreen/{weatherItem}", arguments = listOf(
+            navArgument(name = "weatherItem") {
+                type = WeatherType()
+            }
+        )) {
+            val weatherItem = it.arguments?.getParcelable<ParcelableWeatherItem>("weatherItem")
+            ThisWeekDetailScreen(navController = navController, parcelableWeatherItem = weatherItem)
         }
     }
 }

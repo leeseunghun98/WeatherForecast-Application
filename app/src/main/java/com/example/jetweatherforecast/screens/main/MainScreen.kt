@@ -14,6 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.jetweatherforecast.data.DataOrException
@@ -51,10 +52,13 @@ fun MainScreen(
         if (weatherData.loading == true) {
             CircularProgressIndicator()
         } else if (weatherData.data != null) {
-            MainScaffold(weather = weatherData.data!!, navController = navController, isImperial = isImperial)
+            MainScaffold(
+                weather = weatherData.data!!,
+                navController = navController,
+                isImperial = isImperial
+            )
         }
     }
-
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -70,12 +74,12 @@ fun MainScaffold(weather: Weather, navController: NavController, isImperial: Boo
             }
         )
     }) {
-        MainContent(data = weather, isImperial = isImperial)
+        MainContent(data = weather, isImperial = isImperial, navController = navController)
     }
 }
 
 @Composable
-fun MainContent(data: Weather, isImperial: Boolean) {
+fun MainContent(data: Weather, isImperial: Boolean, navController: NavController) {
     val weatherItem = data.list[0]
     val imageUrl = "https://openweathermap.org/img/wn/${weatherItem.weather[0].icon}.png"
 
@@ -109,6 +113,7 @@ fun MainContent(data: Weather, isImperial: Boolean) {
                     style = MaterialTheme.typography.h4,
                     fontWeight = FontWeight.ExtraBold
                 )
+                Text(text = "avg", fontWeight = FontWeight.Light, fontSize = 10.sp)
                 Text(text = weatherItem.weather[0].main, fontStyle = FontStyle.Italic)
             }
         }
@@ -128,8 +133,9 @@ fun MainContent(data: Weather, isImperial: Boolean) {
             shape = RoundedCornerShape(size = 14.dp)
         ) {
             LazyColumn(modifier = Modifier.padding(2.dp), contentPadding = PaddingValues(1.dp)) {
+                var index = 0
                 items(items = data.list) { item ->
-                    WeatherDetailRow(weather = item)
+                    WeatherDetailRow(weather = item, navController = navController, data.city, index++)
                 }
             }
         }

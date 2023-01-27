@@ -33,7 +33,7 @@ fun WeatherSplashScreen(navController: NavController) {
     val scale = remember {
         Animatable(0f)
     }
-    val defaultCity = "Korea"
+    val defaultCity = "Seoul"
 
     LaunchedEffect(key1 = true, block = {
         scale.animateTo(
