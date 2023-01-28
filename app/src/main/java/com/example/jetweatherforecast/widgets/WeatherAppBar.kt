@@ -12,7 +12,6 @@ import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -135,7 +134,7 @@ fun WeatherAppBar(
                 }
             }
         },
-        backgroundColor = Color.Transparent,
+        backgroundColor = Color.White.copy(alpha = 0.35f),
         elevation = elevation
     )
 }
@@ -153,7 +152,7 @@ fun ShowSettingDropDownMenu(showDialog: MutableState<Boolean>, navController: Na
     var expanded by remember {
         mutableStateOf(true)
     }
-    val items = listOf("About", "Favorites", "Settings")
+    val items = listOf("Version", "Favorites", "Settings")
 
     Column(
         modifier = Modifier
@@ -175,7 +174,7 @@ fun ShowSettingDropDownMenu(showDialog: MutableState<Boolean>, navController: Na
                 }) {
                     Icon(
                         imageVector = when (text) {
-                            "About" -> Icons.Default.Info
+                            "Version" -> Icons.Default.Info
                             "Favorites" -> Icons.Default.FavoriteBorder
                             else -> Icons.Default.Settings
                         }, contentDescription = null,
@@ -184,7 +183,7 @@ fun ShowSettingDropDownMenu(showDialog: MutableState<Boolean>, navController: Na
                     Text(text = text, modifier = Modifier.clickable {
                         navController.navigate(
                             when (text) {
-                                "About" -> WeatherScreens.AboutScreen.name
+                                "Version" -> WeatherScreens.VersionScreen.name
                                 "Favorites" -> WeatherScreens.FavoriteScreen.name
                                 else -> WeatherScreens.SettingsScreen.name
                             }

@@ -39,7 +39,7 @@ fun WeatherNavigation() {
         composable(WeatherScreens.SearchScreen.name) {
             SearchScreen(navController = navController)
         }
-        composable(WeatherScreens.AboutScreen.name) {
+        composable(WeatherScreens.VersionScreen.name) {
             AboutScreen(navController = navController)
         }
         composable(WeatherScreens.SettingsScreen.name) {
@@ -49,13 +49,23 @@ fun WeatherNavigation() {
             FavoritesScreen(navController = navController)
         }
         val thisWeekDetailScreen = WeatherScreens.ThisWeekDetailScreen.name
-        composable("$thisWeekDetailScreen/{weatherItem}", arguments = listOf(
+        composable("$thisWeekDetailScreen/{weatherItem}/{isImperial}", arguments = listOf(
             navArgument(name = "weatherItem") {
                 type = WeatherType()
+            }, navArgument(name = "isImperial") {
+                type = NavType.BoolType
             }
         )) {
-            val weatherItem = it.arguments?.getParcelable<ParcelableWeatherItem>("weatherItem")
-            ThisWeekDetailScreen(navController = navController, parcelableWeatherItem = weatherItem)
+//            val weatherItem = it.arguments?.getParcelable<ParcelableWeatherItem>("weatherItem")
+//            ThisWeekDetailScreen(
+//                navController = navController,
+//                parcelableWeatherItem = weatherItem,,
+//            )
+            it.arguments?.let { arguments ->
+                val parcelableWeatherItem = arguments.getParcelable<ParcelableWeatherItem>("weatherItem")
+                val isImperial = arguments.getBoolean("isImperial")
+                ThisWeekDetailScreen(navController = navController, parcelableWeatherItem = parcelableWeatherItem!!, isImperial = isImperial)
+            }
         }
     }
 }

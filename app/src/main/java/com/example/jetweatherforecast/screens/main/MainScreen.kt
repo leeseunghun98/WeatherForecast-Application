@@ -1,28 +1,31 @@
 package com.example.jetweatherforecast.screens.main
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.jetweatherforecast.R
 import com.example.jetweatherforecast.data.DataOrException
 import com.example.jetweatherforecast.model.Weather
 import com.example.jetweatherforecast.navigation.WeatherScreens
 import com.example.jetweatherforecast.screens.settings.SettingsViewModel
-import com.example.jetweatherforecast.utils.formatDate
-import com.example.jetweatherforecast.utils.formatDecimals
+import com.example.jetweatherforecast.utils.Constants.ALPHA
 import com.example.jetweatherforecast.widgets.*
 
 @Composable
@@ -64,19 +67,30 @@ fun MainScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MainScaffold(weather: Weather, navController: NavController, isImperial: Boolean) {
-    Scaffold(topBar = {
-        WeatherAppBar(
-            title = weather.city.name + " ,${weather.city.country}",
-            navController = navController,
-            elevation = 5.dp,
-            onAddActionClicked = {
-                navController.navigate(WeatherScreens.SearchScreen.name)
-            }
+    Box {
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            painter = painterResource(R.drawable.background_image),
+            contentDescription = "background_image",
+            contentScale = ContentScale.FillBounds
         )
-    }) {
-        MainContent(data = weather, isImperial = isImperial, navController = navController)
+        Scaffold(modifier = Modifier.padding(4.dp),
+            backgroundColor = Color.Transparent,
+            topBar = {
+                WeatherAppBar(
+                    title = weather.city.name + " ,${weather.city.country}",
+                    navController = navController,
+                    elevation = 5.dp,
+                    onAddActionClicked = {
+                        navController.navigate(WeatherScreens.SearchScreen.name)
+                    }
+                )
+            }) {
+            MainContent(data = weather, isImperial = isImperial, navController = navController)
+        }
     }
 }
+
 
 @Composable
 fun MainContent(data: Weather, isImperial: Boolean, navController: NavController) {
@@ -90,36 +104,7 @@ fun MainContent(data: Weather, isImperial: Boolean, navController: NavController
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = formatDate(weatherItem.dt),
-            style = MaterialTheme.typography.caption,
-            color = MaterialTheme.colors.onSecondary,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(6.dp)
-        )
-        Surface(
-            modifier = Modifier
-                .padding(4.dp)
-                .size(200.dp), shape = CircleShape, color = Color(0xFFFFC400)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Image https://openweathermap.org/img/wn/{ImageName}.png
-                WeatherStateImage(imageUrl = imageUrl)
-                Text(
-                    text = formatDecimals(weatherItem.temp.day) + "°",
-                    style = MaterialTheme.typography.h4,
-                    fontWeight = FontWeight.ExtraBold
-                )
-                Text(text = "avg", fontWeight = FontWeight.Light, fontSize = 10.sp)
-                Text(text = weatherItem.weather[0].main, fontStyle = FontStyle.Italic)
-            }
-        }
-        HumidityWindPressureRow(weather = weatherItem, isImperial = isImperial)
-        Divider()
-        SunSetSunRiseRow(weather = weatherItem)
+        WeatherDetail(weatherItem = weatherItem, imageUrl = imageUrl, isImperial = isImperial)
         Text(
             text = "This Week",
             style = MaterialTheme.typography.subtitle1,
@@ -129,13 +114,16 @@ fun MainContent(data: Weather, isImperial: Boolean, navController: NavController
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(),
-            color = Color(0xFFEEF1EF),
+            color = Color(0xFFEEF1EF).copy(alpha = ALPHA),
             shape = RoundedCornerShape(size = 14.dp)
         ) {
             LazyColumn(modifier = Modifier.padding(2.dp), contentPadding = PaddingValues(1.dp)) {
-                var index = 0
                 items(items = data.list) { item ->
-                    WeatherDetailRow(weather = item, navController = navController, data.city, index++)
+                    WeatherDetailRow(
+                        weather = item,
+                        navController = navController,
+                        isImperial = isImperial
+                    )
                 }
             }
         }

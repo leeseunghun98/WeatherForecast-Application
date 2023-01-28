@@ -40,7 +40,7 @@ fun WeatherSplashScreen(navController: NavController) {
             targetValue = 0.9f,
             animationSpec = tween(durationMillis = 800,
                 easing = {
-                    OvershootInterpolator(8f).getInterpolation(it)
+                    OvershootInterpolator(1f).getInterpolation(it)
                 }
             )
         )

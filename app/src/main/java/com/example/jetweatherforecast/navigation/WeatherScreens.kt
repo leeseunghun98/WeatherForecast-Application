@@ -3,7 +3,7 @@ package com.example.jetweatherforecast.navigation
 enum class WeatherScreens {
     SplashScreen,
     MainScreen,
-    AboutScreen,
+    VersionScreen,
     FavoriteScreen,
     SearchScreen,
     SettingsScreen,

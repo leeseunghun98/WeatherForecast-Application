@@ -25,7 +25,7 @@ fun AboutScreen(navController: NavController) {
     Scaffold(topBar = {
         WeatherAppBar(
             navController = navController,
-            title = "About",
+            title = "Version",
             icon = Icons.Default.ArrowBack,
             isMainScreen = false
         ) {
