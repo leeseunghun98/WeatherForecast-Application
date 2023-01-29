@@ -7,4 +7,4 @@ Stacks : <img src="https://img.shields.io/badge/Android-3DDC84?style=flat&logo=A
 
 API : https://openweathermap.org/
 
-![image](https://user-images.githubusercontent.com/78264248/215268644-7a3b3de7-a99a-45e1-b666-f7ee86abfbba.png)
+![JetWeatherForecast](https://user-images.githubusercontent.com/78264248/215307810-e155c39a-9cf7-44bc-8527-2f0e40e5f5b8.gif)
